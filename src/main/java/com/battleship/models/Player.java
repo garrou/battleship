@@ -3,9 +3,11 @@ package com.battleship.models;
 import com.battleship.enums.ShipOrientation;
 import com.battleship.enums.ShipState;
 import com.battleship.enums.ShipType;
+import com.battleship.utils.Constant;
 import com.battleship.utils.Helper;
 
 import java.util.Arrays;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Player {
@@ -34,18 +36,46 @@ public class Player {
     }
 
     public void putShipsAutomatically() {
-        Arrays.stream(ShipType.values())
-                .forEach(s -> {
-                    // TODO: put ship
-                });
+        Random random = new Random();
+
+        for (ShipType s : ShipType.values()) {
+
+            Ship ship = new Ship(
+                    new Position(-1, -1),
+                    s.getSize(),
+                    ShipOrientation.values()[random.nextInt(2)]
+            );
+
+            while (!putShip(ship)) {
+                int x = random.nextInt(Constant.BOARD_SIZE);
+                int y = random.nextInt(Constant.BOARD_SIZE);
+                ship.setOrientation(ShipOrientation.values()[random.nextInt(2)]);
+                ship.setHead(new Position(x, y));
+                ship.setOrientation(ShipOrientation.HORIZONTAL);
+            }
+        }
+    }
+
+    public void autoFire() {
+        Random random = new Random();
+        Position position;
+
+        do {
+            position = new Position(
+                    random.nextInt(0, Constant.BOARD_SIZE),
+                    random.nextInt(0, Constant.BOARD_SIZE)
+            );
+            if (wasNeverFireAt(position)) {
+                fireAt(position);
+            }
+        } while (!wasNeverFireAt(position));
     }
 
     public void enterFireCoordinate() {
-        Position pos = new Position(-1, -1);
+        Position pos;
 
-        while (!pos.isValid()) {
+        do {
             displayEnemyBoard();
-
             System.out.print("Fire coordinate (ex A5) : ");
             String input = sc.nextLine();
             pos = Helper.getPos(input);
@@ -63,9 +93,9 @@ public class Player {
                     System.out.println("MISS !");
                 }
             } else {
-                System.out.printf("You already fire at %s\n", input);
+                System.out.printf("You already fire at %s.\n", input);
             }
-        }
+        } while (!pos.isValid());
     }
 
     public void displayBoard() {
@@ -76,8 +106,7 @@ public class Player {
         enemyBoard.displayEnemyBoard();
     }
 
-    // TODO: private
-    public boolean putShip(Ship ship) {
+    private boolean putShip(Ship ship) {
         if (!ship.isValidPos() || !playerBoard.isValidPlacement(ship)) {
             return false;
         }

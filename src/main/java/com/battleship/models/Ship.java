@@ -9,11 +9,11 @@ public class Ship {
 
     private final ArrayList<ShipUnit> units;
 
-    private final Position head;
-
-    private final ShipOrientation orientation;
-
     private final int size;
+
+    private Position head;
+
+    private ShipOrientation orientation;
 
     public Ship(Position h, int s, ShipOrientation o) {
         units = new ArrayList<>();
@@ -44,8 +44,16 @@ public class Ship {
         return head;
     }
 
+    public void setHead(Position pos) {
+        head = pos;
+    }
+
     public int getSize() {
         return size;
+    }
+
+    public void setOrientation(ShipOrientation o) {
+        orientation = o;
     }
 
     public boolean isVertical() {

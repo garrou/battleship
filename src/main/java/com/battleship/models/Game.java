@@ -1,8 +1,5 @@
 package com.battleship.models;
 
-import com.battleship.enums.ShipOrientation;
-import com.battleship.utils.Helper;
-
 public class Game {
 
     private final Player player;
@@ -17,14 +14,15 @@ public class Game {
     public void launch() {
 
         // TODO: ask to put manually or auto
-        player.putShipsManually();
+        // player.putShipsManually();
 
-        computer.putShip(new Ship(Helper.getPos("d5"), 2, ShipOrientation.HORIZONTAL));
+        player.putShipsAutomatically();
+        computer.putShipsAutomatically();
 
         while (!player.isLoose() && !computer.isLoose()) {
             player.displayBoard();
             player.enterFireCoordinate();
-            // TODO: computer fire
+            computer.autoFire();
         }
 
         if (player.isLoose()) {
