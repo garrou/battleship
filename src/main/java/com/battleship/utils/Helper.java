@@ -27,4 +27,10 @@ public class Helper {
                 ? ShipOrientation.VERTICAL
                 : ShipOrientation.HORIZONTAL;
     }
+
+    public static boolean getYesNo(String choice) {
+        Matcher matcherOrientation = Pattern.compile("[ynYN]").matcher(choice);
+        String letter = matcherOrientation.find() ? matcherOrientation.group() : "";
+        return letter.toUpperCase().compareTo("Y") == 0;
+    }
 }

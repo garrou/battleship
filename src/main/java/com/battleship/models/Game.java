@@ -1,5 +1,9 @@
 package com.battleship.models;
 
+import com.battleship.utils.Helper;
+
+import java.util.Scanner;
+
 public class Game {
 
     private final Player player;
@@ -13,10 +17,7 @@ public class Game {
 
     public void launch() {
 
-        // TODO: ask to put manually or auto
-        // player.putShipsManually();
-
-        player.putShipsAutomatically();
+        askAddShipsAuto();
         computer.putShipsAutomatically();
 
         while (!player.isLoose() && !computer.isLoose()) {
@@ -29,6 +30,18 @@ public class Game {
             System.out.println("YOU LOOSE !");
         } else {
             System.out.println("YOU WIN !");
+        }
+    }
+
+    private void askAddShipsAuto() {
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        boolean isAuto = Helper.getYesNo(input);
+
+        if (isAuto) {
+            player.putShipsAutomatically();
+        } else {
+            player.putShipsManually();
         }
     }
 }

@@ -39,36 +39,34 @@ public class Player {
         Random random = new Random();
 
         for (ShipType s : ShipType.values()) {
+            Ship ship;
 
-            Ship ship = new Ship(
-                    new Position(-1, -1),
-                    s.getSize(),
-                    ShipOrientation.values()[random.nextInt(2)]
-            );
-
-            while (!putShip(ship)) {
-                int x = random.nextInt(Constant.BOARD_SIZE);
-                int y = random.nextInt(Constant.BOARD_SIZE);
-                ship.setOrientation(ShipOrientation.values()[random.nextInt(2)]);
-                ship.setHead(new Position(x, y));
-                ship.setOrientation(ShipOrientation.HORIZONTAL);
-            }
+            do {
+                ship = new Ship(
+                        new Position(
+                                random.nextInt(Constant.BOARD_SIZE),
+                                random.nextInt(Constant.BOARD_SIZE)
+                        ),
+                        s.getSize(),
+                        ShipOrientation.values()[random.nextInt(2)]
+                );
+            } while (!putShip(ship));
         }
     }
 
     public void autoFire() {
         Random random = new Random();
-        Position position;
+        ShipState shipState = null;
 
         do {
-            position = new Position(
+            Position position = new Position(
                     random.nextInt(0, Constant.BOARD_SIZE),
                     random.nextInt(0, Constant.BOARD_SIZE)
             );
             if (wasNeverFireAt(position)) {
-                fireAt(position);
+                shipState = fireAt(position);
             }
-        } while (!wasNeverFireAt(position));
+        } while (shipState == null);
     }
 
     public void enterFireCoordinate() {
@@ -107,7 +105,7 @@ public class Player {
     }
 
     private boolean putShip(Ship ship) {
-        if (!ship.isValidPos() || !playerBoard.isValidPlacement(ship)) {
+        if (!playerBoard.isValidPlacement(ship)) {
             return false;
         }
         playerBoard.putShip(ship);
@@ -115,7 +113,7 @@ public class Player {
     }
 
     private boolean wasNeverFireAt(Position pos) {
-        return enemyBoard.wasNeverHit(pos);
+        return enemyBoard.wasNeverFireAt(pos);
     }
 
     private ShipState fireAt(Position pos) {

@@ -59,6 +59,9 @@ public class Board {
     }
 
     public boolean isValidPlacement(Ship ship) {
+        if (!ship.isValidPos()) {
+            return false;
+        }
         Position head = ship.getHead();
 
         return ship.isVertical()
@@ -68,12 +71,18 @@ public class Board {
                 .allMatch(i -> grid[head.y()][i] == BoardState.SEA.getValue());
     }
 
-    public boolean wasNeverHit(Position pos) {
-        return grid[pos.y()][pos.x()] != ShipState.HIT.getValue();
+    public boolean wasNeverFireAt(Position pos) {
+        return grid[pos.y()][pos.x()] != ShipState.HIT.getValue()
+                && grid[pos.y()][pos.x()] != ShipState.MISS.getValue()
+                && grid[pos.y()][pos.x()] != ShipState.SINK.getValue();
     }
 
     public ArrayList<Ship> getShips() {
         return ships;
+    }
+
+    public int[][] getGrid() {
+        return grid;
     }
 
     public void displayBoard() {
