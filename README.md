@@ -4,4 +4,4 @@
 
 ## Description
 
-Developed during my personal summer coding challenge in 3 hours (first commit).
+Developed during my personal summer coding challenge in 4 hours.
